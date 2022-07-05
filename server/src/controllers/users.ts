@@ -37,7 +37,7 @@ class User {
     }
   }
 
-  async createUser(req: Request, res: Response) {
+  async createNewUser(req: Request, res: Response) {
     let { email, password } = req.body;
 
     if (!email || !password) {

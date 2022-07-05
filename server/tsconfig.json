@@ -4,6 +4,8 @@
     "typeRoots": ["../node_modules/@types"],
     "module": "NodeNext",
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+    "emitDecoratorMetadata": true,
+    "noImplicitAny": true,
+    "forceConsistentCasingInFileNames": true
   }
 }

@@ -3,6 +3,7 @@
     "start:dev": "nodemon src/app.ts"
   },
   "dependencies": {
+    "@typegoose/typegoose": "^9.10.1",
     "@types/bcrypt": "^5.0.0",
     "@types/braintree": "^3.3.2",
     "@types/cookie-parser": "^1.4.3",

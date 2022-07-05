@@ -1,116 +1,152 @@
-import { Schema, model, SchemaDefinitionProperty } from 'mongoose';
+import { SchemaDefinitionProperty } from 'mongoose';
 
-export interface IsAdressSchema {
-  firstName: string;
-  lastName: string;
-  streetAdress: string;
-  residenceDetails: string;
-  city: string;
-  state: string;
-  country: string;
-  postalCode: string;
+import { getModelForClass, prop } from '@typegoose/typegoose';
+
+export class Adress {
+  @prop()
+  public firstName: string;
+
+  @prop()
+  public lastName: string;
+
+  @prop()
+  public streetAdress: string;
+
+  @prop()
+  public residenceDetails: string;
+
+  @prop()
+  public city: string;
+
+  @prop()
+  public state: string;
+
+  @prop()
+  public country: string;
+
+  @prop()
+  public postalCode: string;
 }
 
-export interface IsUserSchema {
-  firstName?: string;
-  lastName?: string;
-  email: string;
-  password: string;
-  orderHistory?: SchemaDefinitionProperty<[]>;
-  subscriptions?: SchemaDefinitionProperty<[]>;
-  billingAdress?: IsAdressSchema;
-  primaryShippingAdress?: IsAdressSchema;
-  secretKey?: string;
+export class User {
+  @prop()
+  public firstName?: string;
+
+  @prop()
+  public lastName?: string;
+
+  @prop()
+  public email: string;
+
+  @prop()
+  public password: string;
+
+  @prop()
+  public orderHistory?: SchemaDefinitionProperty<[]>;
+
+  @prop()
+  public subscriptions?: SchemaDefinitionProperty<[]>;
+
+  @prop()
+  public billingAdress?: Adress;
+
+  @prop()
+  public primaryShippingAdress?: Adress;
+
+  @prop()
+  public secretKey?: string;
 }
 
-const adressSchema = new Schema<IsAdressSchema>({
-  firstName: {
-    type: String,
-    required: false,
-    maxlength: 32,
-  },
+export const userModel = getModelForClass(User);
 
-  lastName: {
-    type: String,
-    required: false,
-    maxlength: 32,
-  },
+// const adressSchema = new Schema<IsAdressSchema>({
+//   firstName: {
+//     type: String,
+//     required: false,
+//     maxlength: 32,
+//   },
 
-  streetAdress: {
-    type: String,
-    required: true,
-  },
+//   lastName: {
+//     type: String,
+//     required: false,
+//     maxlength: 32,
+//   },
 
-  residenceDetails: String,
+//   streetAdress: {
+//     type: String,
+//     required: true,
+//   },
 
-  city: {
-    type: String,
-    required: true,
-  },
+//   residenceDetails: String,
 
-  state: {
-    type: String,
-    required: true,
-  },
+//   city: {
+//     type: String,
+//     required: true,
+//   },
 
-  country: {
-    type: String,
-    required: true,
-  },
+//   state: {
+//     type: String,
+//     required: true,
+//   },
 
-  postalCode: {
-    type: String,
-    required: true,
-  },
-});
+//   country: {
+//     type: String,
+//     required: true,
+//   },
 
-const userSchema = new Schema<IsUserSchema>(
-  {
-    firstName: {
-      type: String,
-      required: false,
-      maxlength: 32,
-    },
+//   postalCode: {
+//     type: String,
+//     required: true,
+//   },
+// });
 
-    lastName: {
-      type: String,
-      required: false,
-      maxlength: 32,
-    },
+// const userSchema = new Schema<IsUserSchema>(
+//   {
+//     firstName: {
+//       type: String,
+//       required: false,
+//       maxlength: 32,
+//     },
 
-    email: {
-      type: String,
-      required: true,
-      trim: true,
-      index: { unique: true },
-      match: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
-    },
+//     lastName: {
+//       type: String,
+//       required: false,
+//       maxlength: 32,
+//     },
 
-    password: {
-      type: String,
-      required: true,
-    },
+//     email: {
+//       type: String,
+//       required: true,
+//       trim: true,
+//       index: { unique: true },
+//       match: /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/,
+//     },
 
-    orderHistory: {
-      type: Array,
-      default: [],
-    },
+//     password: {
+//       type: String,
+//       required: true,
+//     },
 
-    subscriptions: {
-      type: Array,
-      default: [],
-    },
+//     orderHistory: {
+//       type: Array,
+//       default: [],
+//     },
 
-    billingAdress: adressSchema,
+//     subscriptions: {
+//       type: Array,
+//       default: [],
+//     },
 
-    primaryShippingAdress: adressSchema,
+//     billingAdress: adressSchema,
 
-    secretKey: {
-      type: String,
-      default: null,
-    },
-  },
-  { timestamps: true }
-);
+//     primaryShippingAdress: adressSchema,
 
-export const userModel = model<IsUserSchema>('users', userSchema);
+//     secretKey: {
+//       type: String,
+//       default: null,
+//     },
+//   },
+//   { timestamps: true }
+// );
+
+// export const userModel = model<IsUserSchema>('users', userSchema);

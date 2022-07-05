@@ -9,10 +9,11 @@ import mongoose from 'mongoose';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+require('dotenv').config();
+
+import { authRouter } from './routes/auth';
 
 const app = express();
-
-require('dotenv').config();
 
 mongoose
   .connect(process.env.DATABASE, {
@@ -26,6 +27,17 @@ mongoose
   .catch((err) => {
     console.log("Database don't connected :'(");
   });
+
+// middlewares
+app.use(morgan('dev'));
+app.use(cookieParser());
+app.use(cors());
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: false }));
+app.use(express.json());
+
+// routes
+app.use('/api', authRouter);
 
 const PORT = process.env.PORT;
 

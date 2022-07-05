@@ -3,58 +3,61 @@ import { SchemaDefinitionProperty } from 'mongoose';
 import { getModelForClass, prop } from '@typegoose/typegoose';
 
 export class Adress {
-  @prop()
+  @prop({ required: true })
   public firstName: string;
 
-  @prop()
+  @prop({ required: true })
   public lastName: string;
 
-  @prop()
+  @prop({ required: true })
   public streetAdress: string;
 
-  @prop()
+  @prop({ required: true })
   public residenceDetails: string;
 
-  @prop()
+  @prop({ required: true })
   public city: string;
 
-  @prop()
+  @prop({ required: true })
   public state: string;
 
-  @prop()
+  @prop({ required: true })
   public country: string;
 
-  @prop()
+  @prop({ required: true })
   public postalCode: string;
 }
 
 export class User {
-  @prop()
+  @prop({ required: false })
   public firstName?: string;
 
-  @prop()
+  @prop({ required: false })
   public lastName?: string;
 
-  @prop()
+  @prop({ required: true })
   public email: string;
 
-  @prop()
+  @prop({ required: true })
   public password: string;
 
-  @prop()
+  @prop({ default: [], required: false })
   public orderHistory?: SchemaDefinitionProperty<[]>;
 
-  @prop()
+  @prop({ required: false })
   public subscriptions?: SchemaDefinitionProperty<[]>;
 
-  @prop()
+  @prop({ required: false })
   public billingAdress?: Adress;
 
-  @prop()
+  @prop({ required: false })
   public primaryShippingAdress?: Adress;
 
-  @prop()
+  @prop({ default: null, required: false })
   public secretKey?: string;
+
+  @prop({ default: 0 })
+  public userRole: Number;
 }
 
 export const userModel = getModelForClass(User);

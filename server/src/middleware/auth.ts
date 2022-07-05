@@ -36,9 +36,10 @@ export const isAdmin = async (
 ) => {
   try {
     let reqUser = await userModel.findById(req.body.loggedInUserId);
-    if (!reqUser || reqUser.userRole !== 1) {
-      return res.status(403).json({ error: 'Access denied' });
+    if (reqUser.userRole === 0) {
+      res.status(403).json({ error: 'Access denied' });
     }
+    next();
   } catch {
     res.status(404);
   }

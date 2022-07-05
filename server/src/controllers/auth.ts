@@ -48,7 +48,8 @@ class Auth {
           return res.json({ error });
         } else {
           try {
-            password = bcrypt.hashSync(password, 10);
+            const salt = bcrypt.genSaltSync(10);
+            password = bcrypt.hashSync(password, salt);
             const userFound = await userModel.findOne({ email: email });
             if (userFound) {
               error = {

@@ -12,20 +12,17 @@ import cors from 'cors';
 require('dotenv').config();
 
 import { authRouter } from './routes/auth';
+import { usersRouter } from './routes/users';
 
 const app = express();
 
 mongoose
-  .connect(process.env.DATABASE, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useCreateIndex: true,
-  } as mongoose.ConnectOptions)
+  .connect(process.env.DATABASE)
   .then(() => {
     console.log('C======8 Database connected successeful 8======D');
   })
   .catch((err) => {
-    console.log("Database don't connected :'(");
+    console.log("Database don't connected :'(", err);
   });
 
 // middlewares
@@ -37,10 +34,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 // routes
-app.use('/api', authRouter);
+app.use('/', authRouter);
+app.use('/', usersRouter);
 
 const PORT = process.env.PORT;
 
 app.listen(PORT, () => {
-  console.log(`Server is runnint on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

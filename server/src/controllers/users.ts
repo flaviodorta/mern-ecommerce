@@ -3,13 +3,21 @@ import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 
 class User {
+  private static instance: User | null = null;
+
+  public static getUserInstance(): User {
+    if (!User.instance) {
+      User.instance = new User();
+    }
+    return User.instance;
+  }
+
   async getAllUsers(req: Request, res: Response) {
     try {
-      let users = await userModel
-        .find({})
-        .populate('allProducts.id', 'pName pImages pPrice')
-        .populate('user', 'name email')
-        .sort({ _id: -1 });
+      let users = await userModel.find({});
+      // .populate('allProducts.id', 'pName pImages pPrice')
+      // .populate('user', 'name email')
+      // .sort({ _id: -1 });
       if (users) {
         return res.json({ users });
       }
@@ -40,24 +48,27 @@ class User {
   async createNewUser(req: Request, res: Response) {
     let { email, password } = req.body;
 
-    if (!email || !password) {
-      return res.json({ message: 'All fields must be filled.' });
-    } else {
-      const salt = bcrypt.genSaltSync(10);
-      const hashedPassword = bcrypt.hashSync(password, salt);
-      try {
-        let newUser = new userModel({
-          email: email,
-          password: password,
-        });
-        let save = await newUser.save();
-        if (save) {
-          return res.json({ success: 'User created successfully!' });
-        }
-      } catch (err) {
-        return res.json({ error: err });
+    // if (!email || !password) {
+    //   return res.json({ message: 'All fields must be filled.' });
+    // } else {
+    console.log(email, password);
+    const salt = bcrypt.genSaltSync(10);
+    console.log(salt);
+    const hashedPassword = bcrypt.hashSync(password, salt);
+    console.log(hashedPassword);
+    try {
+      let newUser = new userModel({
+        email: email,
+        password: hashedPassword,
+      });
+      let save = await newUser.save();
+      if (save) {
+        return res.json({ success: 'User created successfully!' });
       }
+    } catch (err) {
+      return res.json({ error: err });
     }
+    // }
   }
 
   async editAccountDetails(req: Request, res: Response) {
@@ -172,11 +183,11 @@ class User {
     if (!uId || !oldPassword || !newPassword) {
       return res.json({ message: 'All filled must be required' });
     } else {
-      const data = await userModel.findOne({ _id: uId });
-      if (!data) {
+      const user = await userModel.findOne({ _id: uId });
+      if (!user) {
         return res.json({ error: 'Invalid user' });
       } else {
-        const oldPassCheck = await bcrypt.compare(oldPassword, data.password);
+        const oldPassCheck = await bcrypt.compare(oldPassword, user.password);
         if (oldPassCheck) {
           newPassword = bcrypt.hashSync(newPassword, 10);
           let passChange = userModel.findByIdAndUpdate(uId, {
@@ -196,4 +207,4 @@ class User {
   }
 }
 
-export const usersController = new User();
+export const usersController = User.getUserInstance();

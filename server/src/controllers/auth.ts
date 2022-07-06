@@ -7,6 +7,15 @@ import { userModel } from '../models/users';
 import { JWT_SECRET } from '../config/keys';
 
 class Auth {
+  private static instance: Auth | null = null;
+
+  public static getAuthInstance(): Auth {
+    if (!Auth.instance) {
+      Auth.instance = new Auth();
+    }
+    return Auth.instance;
+  }
+
   async isAdmin(req: Request, res: Response) {
     let { loggedInUserId } = req.body;
     try {
@@ -128,4 +137,4 @@ class Auth {
   }
 }
 
-export const authController = new Auth();
+export const authController = Auth.getAuthInstance();

@@ -1,6 +1,5 @@
-import { SchemaDefinitionProperty } from 'mongoose';
-
 import { getModelForClass, prop } from '@typegoose/typegoose';
+import { ProductModel } from './product.model';
 
 export class Adress {
   @prop({ required: true })
@@ -28,7 +27,10 @@ export class Adress {
   public postalCode: string;
 }
 
-export class User {
+export class UserModel {
+  @prop()
+  public id: string;
+
   @prop({ required: false })
   public firstName?: string;
 
@@ -41,11 +43,14 @@ export class User {
   @prop({ required: true })
   public password: string;
 
-  @prop({ default: [], required: false })
-  public orderHistory?: SchemaDefinitionProperty<[]>;
+  @prop({ default: [], type: () => [ProductModel] })
+  public productsCart: ProductModel[];
 
-  @prop({ required: false })
-  public subscriptions?: SchemaDefinitionProperty<[]>;
+  @prop({ default: [], required: false, type: () => [ProductModel] })
+  public orderHistory?: ProductModel[];
+
+  @prop({ required: false, type: () => [ProductModel] })
+  public subscriptions?: ProductModel[];
 
   @prop({ required: false })
   public billingAdress?: Adress;
@@ -56,8 +61,8 @@ export class User {
   @prop({ default: null, required: false })
   public secretKey?: string;
 
-  @prop({ default: 10 })
-  public userRole: Number;
+  @prop({ default: 'user' })
+  public userRole: string;
 }
 
-export const userModel = getModelForClass(User);
+export const userModel = getModelForClass(UserModel);

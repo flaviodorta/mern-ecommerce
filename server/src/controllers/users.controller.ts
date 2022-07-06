@@ -1,15 +1,15 @@
-import { userModel } from '../models/users.model';
+import { userModel } from '../models/user.model';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 
-class User {
-  private static instance: User | null = null;
+class UserController {
+  private static instance: UserController | null = null;
 
-  public static getUserInstance(): User {
-    if (!User.instance) {
-      User.instance = new User();
+  public static getInstance(): UserController {
+    if (!UserController.instance) {
+      UserController.instance = new UserController();
     }
-    return User.instance;
+    return UserController.instance;
   }
 
   async getAllUsers(req: Request, res: Response) {
@@ -167,7 +167,7 @@ class User {
         status: status,
         updatedAt: Date.now(),
       });
-      user.exec((err, result) => {
+      user.exec((err: Error, result) => {
         if (err) console.log(err);
         return res.json({ success: 'User updated successsfully' });
       });
@@ -203,4 +203,4 @@ class User {
   }
 }
 
-export const usersController = User.getUserInstance();
+export const usersController = UserController.getInstance();

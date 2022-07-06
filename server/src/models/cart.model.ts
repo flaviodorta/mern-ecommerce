@@ -1,15 +1,15 @@
 import { prop, getModelForClass } from '@typegoose/typegoose';
-import { Product } from './product.model';
+import { ProductModel } from './product.model';
 
 class ProductCart {
   @prop()
   public quantity: number;
 
   @prop()
-  public product: Product;
+  public product: ProductModel;
 }
 
-export class Cart {
+export class CartModel {
   @prop({ type: () => [ProductCart] })
   public productsCart: ProductCart[];
 
@@ -17,4 +17,4 @@ export class Cart {
   public subtotal: number;
 }
 
-export const cartModel = getModelForClass(Cart);
+export const cartModel = getModelForClass(CartModel);

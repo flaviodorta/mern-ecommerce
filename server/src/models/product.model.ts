@@ -1,20 +1,23 @@
 import { prop, getModelForClass } from '@typegoose/typegoose';
 
-export class Product {
+export class ProductModel {
   @prop()
-  image: string[];
+  public name: string;
 
   @prop()
-  name: string;
+  public description: string;
 
   @prop()
-  description: string;
+  public image: string[];
+
+  @prop({ type: () => [String] })
+  public reviews: string[];
 
   @prop()
-  packQuantity: number;
+  public packQuantity: number;
 
-  @prop()
-  flavors: string[];
+  @prop({ type: () => [String] })
+  public flavors: string[];
 }
 
-export const productModel = getModelForClass(Product);
+export const productModel = getModelForClass(ProductModel);

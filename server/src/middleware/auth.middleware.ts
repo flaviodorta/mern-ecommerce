@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/keys';
-import { userModel } from '../models/users.model';
+import { userModel } from '../models/user.model';
 
 export const loginCheck = (req: Request, res: Response, next: NextFunction) => {
   try {
@@ -36,7 +36,7 @@ export const isAdmin = async (
 ) => {
   try {
     let reqUser = await userModel.findById(req.body.loggedInUserId);
-    if (reqUser.userRole === 0) {
+    if (reqUser.userRole === 'user') {
       res.status(403).json({ error: 'Access denied' });
     }
     next();

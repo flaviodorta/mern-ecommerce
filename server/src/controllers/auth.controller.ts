@@ -3,17 +3,17 @@ import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
 import { validateEmail } from '../utils/helperFunctions';
-import { userModel } from '../models/users.model';
+import { userModel } from '../models/user.model';
 import { JWT_SECRET } from '../config/keys';
 
-class Auth {
-  private static instance: Auth | null = null;
+class AuthController {
+  private static instance: AuthController | null = null;
 
-  public static getAuthInstance(): Auth {
-    if (!Auth.instance) {
-      Auth.instance = new Auth();
+  public static getInstance(): AuthController {
+    if (!AuthController.instance) {
+      AuthController.instance = new AuthController();
     }
-    return Auth.instance;
+    return AuthController.instance;
   }
 
   async isAdmin(req: Request, res: Response) {
@@ -137,4 +137,4 @@ class Auth {
   }
 }
 
-export const authController = Auth.getAuthInstance();
+export const authController = AuthController.getInstance();

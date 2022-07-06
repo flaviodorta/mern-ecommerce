@@ -1,6 +1,6 @@
 import { prop, getModelForClass } from '@typegoose/typegoose';
 
-export class Review {
+export class ReviewModel {
   @prop({ required: true })
   userName: string;
 
@@ -10,3 +10,5 @@ export class Review {
   @prop({ required: true })
   description: string;
 }
+
+export const reviewModel = getModelForClass(ReviewModel);

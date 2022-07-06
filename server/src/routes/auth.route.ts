@@ -1,6 +1,6 @@
 import express from 'express';
-import { authController } from '../controllers/auth';
-import { loginCheck, isAuth, isAdmin } from '../middleware/auth';
+import { authController } from '../controllers/auth.controller';
+import { loginCheck, isAuth, isAdmin } from '../middleware/auth.middleware';
 
 export const authRouter = express.Router();
 

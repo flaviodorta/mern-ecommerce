@@ -11,8 +11,8 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 require('dotenv').config();
 
-import { authRouter } from './routes/auth';
-import { usersRouter } from './routes/users';
+import { authRouter } from './routes/auth.route';
+import { usersRouter } from './routes/users.route';
 
 const app = express();
 

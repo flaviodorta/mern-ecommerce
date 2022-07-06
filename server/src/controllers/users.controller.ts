@@ -1,4 +1,4 @@
-import { userModel } from '../models/users';
+import { userModel } from '../models/users.model';
 import bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
 
@@ -28,7 +28,6 @@ class User {
 
   async getSingleUser(req: Request, res: Response) {
     let { uId } = req.body;
-
     if (!uId) {
       return res.json({ error: 'All filled must be required' });
     } else {
@@ -45,30 +44,27 @@ class User {
     }
   }
 
-  async createNewUser(req: Request, res: Response) {
+  async createUser(req: Request, res: Response) {
     let { email, password } = req.body;
 
-    // if (!email || !password) {
-    //   return res.json({ message: 'All fields must be filled.' });
-    // } else {
-    console.log(email, password);
-    const salt = bcrypt.genSaltSync(10);
-    console.log(salt);
-    const hashedPassword = bcrypt.hashSync(password, salt);
-    console.log(hashedPassword);
-    try {
-      let newUser = new userModel({
-        email: email,
-        password: hashedPassword,
-      });
-      let save = await newUser.save();
-      if (save) {
-        return res.json({ success: 'User created successfully!' });
+    if (!email || !password) {
+      return res.json({ message: 'All fields must be filled.' });
+    } else {
+      const salt = bcrypt.genSaltSync(10);
+      const hashedPassword = bcrypt.hashSync(password, salt);
+      try {
+        let newUser = new userModel({
+          email: email,
+          password: hashedPassword,
+        });
+        let save = await newUser.save();
+        if (save) {
+          return res.json({ success: 'User created successfully!' });
+        }
+      } catch (err) {
+        return res.json({ error: err });
       }
-    } catch (err) {
-      return res.json({ error: err });
     }
-    // }
   }
 
   async editAccountDetails(req: Request, res: Response) {

@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken';
 import { Request, Response } from 'express';
 
 import { validateEmail } from '../utils/helperFunctions';
-import { userModel } from '../models/users';
+import { userModel } from '../models/users.model';
 import { JWT_SECRET } from '../config/keys';
 
 class Auth {

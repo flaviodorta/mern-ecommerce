@@ -1,4 +1,4 @@
-import { userModel } from '../models/users';
+import { userModel } from '../models/users.model';
 
 export const toTitleCase = (str: string) => {
   return str.replace(/\w\S*/g, (txt: string) => {

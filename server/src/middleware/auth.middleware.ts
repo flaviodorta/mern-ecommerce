@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { JWT_SECRET } from '../config/keys';
-import { userModel } from '../models/users';
+import { userModel } from '../models/users.model';
 
 export const loginCheck = (req: Request, res: Response, next: NextFunction) => {
   try {

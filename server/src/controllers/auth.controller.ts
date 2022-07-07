@@ -102,42 +102,49 @@ class AuthController {
 
   async signin(req: Request, res: Response) {
     let { email, candidatePassword } = req.body;
+    let errors = {};
+    if (!email) {
+      errors = { ...errors, emptyEmail: 'Email must not be empty' };
+    }
+    if (!candidatePassword) {
+      errors = { ...errors, emptyPassword: 'Password must not be empty' };
+    }
     if (!email || !candidatePassword) {
-      return res.json({
-        error: 'Fields must not be empty',
-      });
+      return res.json({ errors });
     }
 
     try {
       const userFound = await userModel.findOne({ email: email });
       if (!userFound) {
-        return res.json({ error: 'Invalid email or password.' });
-      } else {
-        const loginSuccess = await bcrypt.compare(
-          candidatePassword,
-          userFound.password
-        );
-        if (loginSuccess) {
-          const token = jwt.sign(
-            {
-              id: userFound.id,
-              role: userFound.userRole,
-            },
-            JWT_SECRET
-          );
-          const encode = jwt.verify(token, JWT_SECRET);
-          return res.json({
-            token: token,
-            user: encode,
-          });
-        } else {
-          return res.json({
-            error: 'Invalid email or password.',
-          });
-        }
+        errors = { ...errors, userNotFound: 'Email not found' };
+        return res.json({ errors });
       }
+
+      const isPasswordValid = await bcrypt.compare(
+        candidatePassword,
+        userFound.password
+      );
+      if (!isPasswordValid) {
+        errors = { ...errors, invalidPassword: 'Invalid password' };
+        return res.json({ errors });
+      }
+
+      const token = jwt.sign(
+        {
+          id: userFound.id,
+          role: userFound.userRole,
+        },
+        JWT_SECRET
+      );
+      const encode = jwt.verify(token, JWT_SECRET);
+      return res.json({
+        token: token,
+        user: encode,
+      });
     } catch (err) {
       console.log(err);
+      errors = err;
+      res.json({ erros });
     }
   }
 }

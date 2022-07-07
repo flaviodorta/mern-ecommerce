@@ -19,6 +19,7 @@ class AuthController {
 
   async isAdmin(req: Request, res: Response) {
     let { loggedInUserId } = req.body;
+
     try {
       let loggedInUserRole = await userModel.findById(loggedInUserId);
       res.json({ role: loggedInUserRole.userRole });
@@ -30,94 +31,87 @@ class AuthController {
   async allUsers(req: Request, res: Response) {
     try {
       let allUsers = await userModel.find({});
-      res.json({ users: allUsers });
+      return res.json({ users: allUsers });
     } catch {
-      res.status(404);
+      return res.status(404).json({ error: "Don't exist users" });
     }
   }
 
-  async signup(req: Request, res: Response) {
+  async signUp(req: Request, res: Response) {
     let { email, password } = req.body;
     let error = {};
+
+    if (!email) {
+      error = { ...error, emptyEmail: 'Email field must not be empty' };
+    }
+    if (!password) {
+      error = { ...error, emptyPassword: 'Password field must not be empty' };
+    }
     if (!email || !password) {
+      return res.json({ error });
+    }
+
+    if (!validateEmail(email)) {
+      error = { ...error, invalidEmail: 'Email is not valid' };
+      return res.json({ error });
+    }
+
+    if (password.length > 255 || password.length < 8) {
       error = {
         ...error,
-        email: 'Filed must not be empty',
-        password: 'Filed must not be empty',
+        invalidPassword: 'Password must be between 8-255 characters',
       };
       return res.json({ error });
-    } else {
-      if (validateEmail(email)) {
-        if (password.length > 255 || password.length < 8) {
-          error = {
-            ...error,
-            password: 'Password must be 8 characters',
-            email: '',
-          };
-          return res.json({ error });
-        } else {
-          try {
-            const salt = bcrypt.genSaltSync(10);
-            password = bcrypt.hashSync(password, salt);
-            const userFound = await userModel.findOne({ email: email });
-            if (userFound) {
-              error = {
-                ...error,
-                email: 'Email already exists',
-                password: '',
-              };
-              return res.json({ error });
-            } else {
-              const id = uuid();
-              let newUser = new userModel({
-                id: id,
-                email,
-                password,
-                userRole: 1, // 1 for admin, 0 for user
-              });
-              newUser
-                .save()
-                .then(() => {
-                  return res.json({
-                    success: 'Account create successfully. Please login.',
-                  });
-                })
-                .catch((err) => {
-                  console.log(err);
-                });
-            }
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      } else {
+    }
+
+    try {
+      const passwordSalt = bcrypt.genSaltSync(10);
+      const hashedPassword = bcrypt.hashSync(password, passwordSalt);
+      const user = await userModel.findOne({ email });
+
+      if (user) {
         error = {
           ...error,
-          password: '',
-          email: 'Email is not valid.',
+          invalidUser: 'There is already a user with that email',
         };
+        return res.json({ error });
       }
+
+      const id = uuid();
+      const newUser = new userModel({
+        id: id,
+        email,
+        hashedPassword,
+        userRole: 'user',
+      });
+
+      newUser.save().then(() => {
+        return res.json({ success: 'Account created successfully.' });
+      });
+    } catch (err) {
+      error = { ...error, catchErr: err };
+      return res.json({ error });
     }
   }
 
-  async signin(req: Request, res: Response) {
+  async signIn(req: Request, res: Response) {
     let { email, candidatePassword } = req.body;
-    let errors = {};
+    let error = {};
     if (!email) {
-      errors = { ...errors, emptyEmail: 'Email must not be empty' };
+      error = { ...error, emptyEmail: 'Email must not be empty' };
     }
     if (!candidatePassword) {
-      errors = { ...errors, emptyPassword: 'Password must not be empty' };
+      error = { ...error, emptyPassword: 'Password must not be empty' };
     }
     if (!email || !candidatePassword) {
-      return res.json({ errors });
+      return res.json({ error });
     }
 
     try {
       const userFound = await userModel.findOne({ email: email });
       if (!userFound) {
-        errors = { ...errors, userNotFound: 'Email not found' };
-        return res.json({ errors });
+        error = { ...error, userNotFound: 'Email not found' };
+        return res.json({ error });
       }
 
       const isPasswordValid = await bcrypt.compare(
@@ -125,8 +119,8 @@ class AuthController {
         userFound.password
       );
       if (!isPasswordValid) {
-        errors = { ...errors, invalidPassword: 'Invalid password' };
-        return res.json({ errors });
+        error = { ...error, invalidPassword: 'Invalid password' };
+        return res.json({ error });
       }
 
       const token = jwt.sign(
@@ -142,9 +136,8 @@ class AuthController {
         user: encode,
       });
     } catch (err) {
-      console.log(err);
-      errors = err;
-      res.json({ erros });
+      error = { ...error, catchErr: err };
+      return res.json({ error });
     }
   }
 }

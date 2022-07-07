@@ -1,9 +1,6 @@
-function App() {
-  return (
-    <div>
-      <h1>Popcornopolis</h1>
-    </div>
-  );
-}
+import './index.css';
+import { BasePage } from './pages/base-page/BasePage';
 
-export default App;
+export function App() {
+  return <BasePage />;
+}

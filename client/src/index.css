@@ -1,0 +1,28 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Brown';
+  src: url('./assets/fonts/Brown-Regular.woff2') format('woff2'),
+    url('./assets/fonts/Brown-Regular.woff') format('woff'),
+    url('./assets/fonts/Brown-Regular.ttf') format('ttf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Faro Display Lucky';
+  src: url('./assets/fonts/Faro-Display-Lucky.woff2') format('woff2'),
+    url('./assets/fonts/Faro-Display-Lucky.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Turbinado Bold';
+  src: url('./assets/fonts/turbinado-bold-webfont.woff2') format('woff2'),
+    url('./assets/fonts/turbinado-bold-webfont.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+}

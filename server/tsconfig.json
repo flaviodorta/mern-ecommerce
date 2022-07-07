@@ -5,7 +5,7 @@
     "module": "NodeNext",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false,
     "forceConsistentCasingInFileNames": true
   }
 }

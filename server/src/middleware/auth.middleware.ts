@@ -13,7 +13,7 @@ class AuthMiddleware {
     return AuthMiddleware.instance;
   }
 
-  loginCheck(req: Request, res: Response, next: NextFunction): void {
+  loginCheck(req: Request, res: Response, next: NextFunction) {
     try {
       let token = [...req.headers.token].join('') as string;
       token = token.replace('Bearer', '');
@@ -27,7 +27,7 @@ class AuthMiddleware {
     }
   }
 
-  isAuth(req: Request, res: Response, next: NextFunction): void {
+  isAuth(req: Request, res: Response, next: NextFunction) {
     let { loggedInUserId } = req.body;
     if (
       !loggedInUserId ||

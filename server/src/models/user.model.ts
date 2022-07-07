@@ -28,7 +28,7 @@ export class Adress {
 }
 
 export class UserModel {
-  @prop()
+  @prop({ required: true })
   public id: string;
 
   @prop({ required: false })

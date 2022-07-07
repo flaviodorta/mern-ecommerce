@@ -1,5 +1,6 @@
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import { randomUUID as uuid } from 'crypto';
 import { Request, Response } from 'express';
 
 import { validateEmail } from '../utils/helperFunctions';
@@ -36,14 +37,13 @@ class AuthController {
   }
 
   async signup(req: Request, res: Response) {
-    let { email, password, cPassword } = req.body;
+    let { email, password } = req.body;
     let error = {};
-    if (!email || !password || !cPassword) {
+    if (!email || !password) {
       error = {
         ...error,
         email: 'Filed must not be empty',
         password: 'Filed must not be empty',
-        cPassword: 'Filed must not be empty',
       };
       return res.json({ error });
     } else {
@@ -68,7 +68,9 @@ class AuthController {
               };
               return res.json({ error });
             } else {
+              const id = uuid();
               let newUser = new userModel({
+                id: id,
                 email,
                 password,
                 userRole: 1, // 1 for admin, 0 for user
@@ -99,8 +101,8 @@ class AuthController {
   }
 
   async signin(req: Request, res: Response) {
-    let { email, password } = req.body;
-    if (!email || !password) {
+    let { email, candidatePassword } = req.body;
+    if (!email || !candidatePassword) {
       return res.json({
         error: 'Fields must not be empty',
       });
@@ -111,11 +113,14 @@ class AuthController {
       if (!userFound) {
         return res.json({ error: 'Invalid email or password.' });
       } else {
-        const loginSuccess = await bcrypt.compare(password, userFound.password);
+        const loginSuccess = await bcrypt.compare(
+          candidatePassword,
+          userFound.password
+        );
         if (loginSuccess) {
           const token = jwt.sign(
             {
-              _id: userFound._id,
+              id: userFound.id,
               role: userFound.userRole,
             },
             JWT_SECRET

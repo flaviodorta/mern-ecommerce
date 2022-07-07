@@ -5,7 +5,7 @@ export const usersRouter = express.Router();
 
 usersRouter.get('/all-users', usersController.getAllUsers);
 
-usersRouter.post('/single-user', usersController.getSingleUser);
+usersRouter.post('/my-account', usersController.getSingleUser);
 usersRouter.post('/new-user', usersController.createUser);
 usersRouter.post('/edit-accountd-details', usersController.editAccountDetails);
 usersRouter.post('/edit-billing-address', usersController.editAddress);
